@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniWarriors - Tap to Earn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .coin-container {
+            text-align: center;
+        }
+        .coin {
+            width: 100px;
+            height: 100px;
+            background-color: gold;
+            border-radius: 50%;
+            display: inline-block;
+            margin-bottom: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .coin:active {
+            transform: scale(0.95);
+        }
+        .message {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .total-minings {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="coin-container">
+        <div class="coin" id="coin"></div>
+        <div class="message" id="message">Tap the coin to earn!</div>
+        <div class="total-minings" id="total-minings">Total Minings: 0</div>
+    </div>
+    <script>
+        let totalMinings = 0;
+
+        document.getElementById('coin').addEventListener('click', function() {
+            // Update the total minings count
+            totalMinings += 1;
+
+            // Update the UI to show the new total
+            document.getElementById('total-minings').innerText = `Total Minings: ${totalMinings}`;
+
+            // Optionally, send the updated minings to the server
+            fetch('/earn', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: 'YOUR_USER_ID', minings: totalMinings }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').innerText = `${data.message} Coins: ${data.coins}`;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
